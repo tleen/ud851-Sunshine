@@ -18,6 +18,8 @@ package com.example.android.sunshine;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.android.sunshine.data.SunshinePreferences;
@@ -45,12 +47,30 @@ public class MainActivity extends AppCompatActivity {
         loadWeatherData();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.forecast, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int menuItemThatWasSelected = item.getItemId();
+        if(menuItemThatWasSelected == R.id.action_refresh){
+            //Context context = MainActivity.this;
+            loadWeatherData();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     /**
      * This method will get the user's preferred location for weather, and then tell some
      * background method to get the weather data in the background.
      */
     private void loadWeatherData() {
         String location = SunshinePreferences.getPreferredWeatherLocation(this);
+        mWeatherTextView.setText("");
         new FetchWeatherTask().execute(location);
     }
 
